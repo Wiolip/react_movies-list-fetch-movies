@@ -14,8 +14,8 @@ export const FindMovie: React.FC<Props> = ({ onAdd }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault();
 
     // Zapobiegamy wysyłaniu pustych zapytań
     if (!query.trim()) {
@@ -49,10 +49,6 @@ export const FindMovie: React.FC<Props> = ({ onAdd }) => {
           setError(false);
         }
       })
-      .catch(() => {
-        setError(true);
-        setPreview(null);
-      })
       .finally(() => {
         setIsLoading(false);
       });
@@ -83,10 +79,15 @@ export const FindMovie: React.FC<Props> = ({ onAdd }) => {
               placeholder="Enter a title to search"
               className={`input ${error ? 'is-danger' : ''}`}
               value={query}
-              onChange={e => {
-                setQuery(e.target.value);
-                setError(false);
-                setPreview(null); // KLUCZOWE: Demo ukrywa podgląd, gdy użytkownik zmienia tytuł
+              onChange={({ target }) => {
+                setQuery(target.value);
+                if (error) {
+                  setError(false);
+                }
+
+                if (preview) {
+                  setPreview(null);
+                }
               }}
             />
           </div>
